@@ -1,0 +1,77 @@
+.backdrop {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.card {
+  max-width: 480px;
+  width: 100%;
+  padding: 40px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg-surface);
+}
+
+.logo {
+  font-family: var(--font-display);
+  color: var(--accent);
+  font-size: 28px;
+  font-weight: 400;
+  margin: 0 0 4px;
+  letter-spacing: -0.5px;
+}
+
+.tagline {
+  color: var(--text-faint);
+  font-size: 13px;
+  margin: 0 0 32px;
+  line-height: 1.5;
+}
+
+.label {
+  color: var(--text-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-input);
+  border-radius: 3px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-family: var(--font-mono);
+  margin-bottom: 20px;
+}
+
+.input::placeholder {
+  color: var(--text-ghost);
+}
+
+.btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--accent);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 3px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+
+.btn:disabled {
+  background: var(--border-input);
+  color: var(--text-faint);
+  cursor: default;
+}

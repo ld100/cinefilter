@@ -1,0 +1,17 @@
+.wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.slider {
+  flex: 1;
+}
+
+.value {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--accent);
+  min-width: 32px;
+  font-weight: 500;
+}
