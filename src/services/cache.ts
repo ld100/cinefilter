@@ -5,6 +5,13 @@ interface CacheEntry<T> {
   timestamp: number;
 }
 
+/**
+ * Simple in-memory cache with a time-to-live (TTL) per entry.
+ *
+ * Used to avoid redundant API calls within the same browser session.
+ * Each API service gets its own singleton instance (tmdbCache, omdbCache)
+ * so cache keys don't collide and caches can be cleared independently.
+ */
 export class ApiCache {
   private store = new Map<string, CacheEntry<unknown>>();
   private ttl: number;
@@ -13,6 +20,7 @@ export class ApiCache {
     this.ttl = ttl;
   }
 
+  /** Return cached data if it exists and hasn't expired, otherwise null. */
   get<T>(key: string): T | null {
     const entry = this.store.get(key);
     if (!entry) return null;
@@ -35,6 +43,7 @@ export class ApiCache {
     return this.store.size;
   }
 
+  /** Build a cache key like "tmdb:discover:1" from a prefix and variable parts. */
   static buildKey(prefix: string, ...parts: (string | number)[]): string {
     return `${prefix}:${parts.join(":")}`;
   }

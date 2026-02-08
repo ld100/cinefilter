@@ -44,10 +44,12 @@ src/
   services/               — API clients and business logic
     tmdb.ts               — TMDB API client (uses primary_release_date)
     omdb.ts               — OMDb API client
+    tmdbAuth.ts           — TMDB authentication (3-step OAuth-like flow + rated movies)
     cache.ts              — In-memory cache with 15-min TTL
     movieLogic.ts         — Pure functions (enrichment, categorization)
   hooks/                  — React hooks
     useMovieSearch.ts     — TMDB search + OMDb verification orchestration
+    useTmdbSession.ts     — TMDB auth lifecycle + rated movie ID management
     useDebounce.ts        — Generic debounce (400ms)
     useToast.ts           — Toast notification state
   components/             — UI (each with co-located .module.css)
@@ -65,8 +67,8 @@ src/
 
 ## Git workflow
 
-- Main branch: `main`. CI deploys to GitHub Pages on push to `main`.
-- CI pipeline: type-check -> lint -> format check -> test -> build.
+- Main branch: `master` (CI also triggers on `main`). CI deploys to GitHub Pages on push.
+- CI pipeline: type-check -> lint -> format check -> test (with coverage) -> build.
 - Husky pre-commit hook runs ESLint fix + Prettier on staged files.
 - Commit messages should be concise and describe the "why".
 
@@ -92,3 +94,4 @@ src/
 2. **Multi-page TMDB fetching**: TMDB returns max 20 results/page. For page sizes of 50 or 100, multiple TMDB pages are fetched sequentially and combined.
 3. **Injectable fetch**: All API service functions accept an optional `fetchFn` parameter defaulting to `globalThis.fetch`, enabling test mocks without patching globals.
 4. **In-memory caching**: `ApiCache` class with 15-minute TTL avoids redundant API calls within a session.
+5. **TMDB "Hide Watched"**: 3-step OAuth-like auth flow to access user's rated movies. Session stored in localStorage. Rated movie IDs cached in localStorage with 1-hour TTL. `categorizeMovies` priority: watched > mismatch > belowCutoff > visible.

@@ -3,6 +3,7 @@ import ApiKeySetup from "./components/ApiKeySetup";
 import FilterPanel from "./components/FilterPanel";
 import MovieCard from "./components/MovieCard";
 import MovieCardSkeleton from "./components/MovieCardSkeleton";
+import Pagination from "./components/Pagination";
 import Toast from "./components/Toast";
 import useMovieSearch from "./hooks/useMovieSearch";
 import useTmdbSession from "./hooks/useTmdbSession";
@@ -73,9 +74,18 @@ export default function App() {
     setKeys(newKeys);
   };
 
+  // Fetch rated movie IDs before searching so watched movies can be filtered out.
+  // This must complete before search() so the categorization has the IDs available.
   const handleSearch = async (pageNum = 1) => {
     if (filters.hideWatched && tmdbSession) {
-      await refreshRatedMovies();
+      try {
+        await refreshRatedMovies();
+      } catch (err) {
+        addToast(
+          err instanceof Error ? err.message : "Failed to fetch watch history",
+          "error",
+        );
+      }
     }
     search(filters, pageNum);
   };
@@ -232,41 +242,6 @@ export default function App() {
       </div>
 
       <Toast messages={messages} onDismiss={dismissToast} />
-    </div>
-  );
-}
-
-interface PaginationProps {
-  page: number;
-  totalPages: number;
-  onNavigate: (page: number) => void;
-}
-
-function Pagination({ page, totalPages, onNavigate }: PaginationProps) {
-  if (totalPages <= 1) return null;
-  return (
-    <div className={styles.pagination} role="navigation" aria-label="Pagination">
-      {page > 1 && (
-        <button
-          type="button"
-          className={styles.pageBtn}
-          onClick={() => onNavigate(page - 1)}
-        >
-          ← Prev
-        </button>
-      )}
-      <span className={styles.pageInfo}>
-        {page}/{totalPages}
-      </span>
-      {page < totalPages && (
-        <button
-          type="button"
-          className={styles.pageBtn}
-          onClick={() => onNavigate(page + 1)}
-        >
-          Next →
-        </button>
-      )}
     </div>
   );
 }

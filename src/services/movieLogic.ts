@@ -1,3 +1,9 @@
+/**
+ * Pure business logic for movie enrichment and categorization.
+ *
+ * Extracted from UI components for testability — every function here is
+ * a pure transform with no side effects or API calls.
+ */
 import type {
   TmdbMovie,
   TmdbProvider,
@@ -12,6 +18,7 @@ const genreMap: Record<number, string> = Object.fromEntries(
   GENRES.map((g) => [g.id, g.name]),
 );
 
+/** Add human-readable genre names and extract the year from the release date string. */
 export function enrichWithGenreNames(movie: TmdbMovie): EnrichedMovie {
   return {
     ...movie,
@@ -20,6 +27,7 @@ export function enrichWithGenreNames(movie: TmdbMovie): EnrichedMovie {
   };
 }
 
+/** Check if a year falls within the user's selected range (inclusive). */
 export function isYearInRange(
   year: number | null,
   yearFrom: number,
@@ -28,6 +36,7 @@ export function isYearInRange(
   return year !== null && year >= yearFrom && year <= yearTo;
 }
 
+/** Merge OMDb verification data into an enriched movie, marking it as "verified" or "mismatch". */
 export function buildVerificationResult(
   movie: EnrichedMovie,
   omdbResult: ParsedOmdbResult | null,
@@ -60,6 +69,15 @@ export function buildVerificationResult(
   };
 }
 
+/**
+ * Sort movies into display buckets based on their verification status.
+ *
+ * Priority order (first match wins):
+ *   1. **watched** — user has rated this movie on TMDB (always filtered, regardless of status)
+ *   2. **hidden** — IMDB year falls outside the selected range (mismatch = likely a re-release)
+ *   3. **belowCutoff** — IMDB rating is below the user's minimum threshold
+ *   4. **visible** — passes all checks, shown in main results
+ */
 export function categorizeMovies(
   movies: EnrichedMovie[],
   verification: Record<number, VerifyStatus>,

@@ -1,3 +1,9 @@
+/**
+ * Core search hook — orchestrates TMDB discovery and OMDb cross-verification.
+ *
+ * Flow: TMDB discover (multi-page) → per-movie TMDB details (for IMDB ID + streaming)
+ *       → OMDb verification → state updates with progressive verification status.
+ */
 import { useState, useRef, useCallback } from "react";
 import { discoverMovies, getMovieDetails } from "../services/tmdb";
 import { getByImdbId, parseOmdbResult } from "../services/omdb";
@@ -11,6 +17,16 @@ import type {
   VerifyStatus,
 } from "../types";
 
+/**
+ * Fetch enough TMDB pages to fill the user's requested page size.
+ *
+ * TMDB returns max 20 results per API page. For larger user-facing page sizes
+ * (e.g. 50 or 100), we fetch multiple sequential TMDB pages and combine them.
+ *
+ * Page mapping example (pageSize=50):
+ *   User page 1 → TMDB pages 1-3 (60 results, trimmed to 50)
+ *   User page 2 → TMDB pages 4-6
+ */
 async function fetchMultiplePages(
   tmdbKey: string,
   filters: Filters,

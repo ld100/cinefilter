@@ -32,32 +32,35 @@ npm run test:coverage # run tests with coverage report
 - `src/constants/index.ts` — Genre list, streaming provider IDs, watch regions, page sizes, default filter values.
 - `src/services/tmdb.ts` — TMDB API client. Uses `primary_release_date` (not `release_date`) to avoid re-release date pollution. Injectable `fetchFn` for testability. Results cached via `tmdbCache`.
 - `src/services/omdb.ts` — OMDb API client. Verifies IMDB year and fetches real IMDB rating. Injectable `fetchFn`. Results cached via `omdbCache`.
+- `src/services/tmdbAuth.ts` — TMDB authentication service. Implements the 3-step OAuth-like flow (request token → user approval → session) and paginated rated-movies fetch.
 - `src/services/cache.ts` — In-memory API response cache with configurable TTL (default 15 min). Exports `tmdbCache` and `omdbCache` singletons.
-- `src/services/movieLogic.ts` — Pure business logic extracted for testability: `enrichWithGenreNames`, `isYearInRange`, `buildVerificationResult`, `categorizeMovies`.
+- `src/services/movieLogic.ts` — Pure business logic extracted for testability: `enrichWithGenreNames`, `isYearInRange`, `buildVerificationResult`, `categorizeMovies`. Categorization priority: watched > mismatch > belowCutoff > visible.
 - `src/hooks/useMovieSearch.ts` — Core search logic. Runs TMDB discover (multi-page fetch for large page sizes), then sequentially verifies each result via OMDb.
+- `src/hooks/useTmdbSession.ts` — TMDB auth lifecycle hook. State machine (idle → awaiting_approval → connecting → connected). Manages session in localStorage, caches rated movie IDs with 1-hour TTL.
 - `src/hooks/useDebounce.ts` — Generic debounce hook (400ms default) used for filter inputs.
 - `src/hooks/useToast.ts` — Toast notification state management.
 - `src/components/` — UI layer. Each component has a co-located `.module.css` file.
   - `App.tsx` — Root component. Manages API keys (localStorage), filter state, pagination, and orchestration.
-  - `FilterPanel.tsx` — Filter controls with debounced inputs for year range and vote count.
+  - `FilterPanel.tsx` — Filter controls with debounced inputs for year range and vote count. Includes Hide Watched section with TMDB auth flow UI.
   - `MovieCard.tsx` — Individual movie display with verification status badge.
   - `MovieCardSkeleton.tsx` — Shimmer loading skeleton matching MovieCard layout.
   - `MultiSelect.tsx` — Toggle chip selector for genres and providers.
   - `RatingSlider.tsx` — Range slider for rating thresholds.
+  - `Pagination.tsx` — Page navigation controls (prev/next with page info).
   - `ApiKeySetup.tsx` — Initial API key entry form.
   - `ErrorBoundary.tsx` — React error boundary (class component).
   - `Toast.tsx` — Fixed-position toast notification display.
 - `src/main.tsx` — Entry point. Wraps App with ErrorBoundary.
 
-**Data flow:** FilterPanel → useMovieSearch → TMDB discover (multi-page) → per-movie TMDB details (IMDB ID + streaming) → OMDb verification → MovieCard with status badge.
+**Data flow:** FilterPanel → useMovieSearch → TMDB discover (multi-page) → per-movie TMDB details (IMDB ID + streaming) → OMDb verification → categorizeMovies (watched / mismatch / belowCutoff / visible) → MovieCard with status badge.
 
 ## Testing
 
 Tests use Vitest + React Testing Library + jsdom. Test files are co-located with source:
 
-- `src/services/__tests__/` — Unit tests for omdb, tmdb, movieLogic, cache
-- `src/components/__tests__/` — Component tests for MovieCard, FilterPanel, MultiSelect, RatingSlider
-- `src/hooks/__tests__/` — Hook tests for useMovieSearch
+- `src/services/__tests__/` — Unit tests for omdb, tmdb, tmdbAuth, movieLogic, cache
+- `src/components/__tests__/` — Component tests for MovieCard, FilterPanel, MultiSelect, RatingSlider, Pagination, ApiKeySetup, ErrorBoundary, Toast
+- `src/hooks/__tests__/` — Hook tests for useMovieSearch, useTmdbSession, useToast
 - `src/test/fixtures.ts` — Shared mock data
 - `src/test/setup.ts` — Test setup (jest-dom matchers + global fetch guard that throws if any test makes a real HTTP call)
 
@@ -83,9 +86,11 @@ CSS Modules with CSS custom properties defined in `src/index.css`. Dark theme. F
 
 7. **In-memory API caching**: `ApiCache` class with 15-minute TTL avoids redundant API calls during the same session.
 
+8. **TMDB "Hide Watched" auth flow**: Uses TMDB's 3-step OAuth-like flow (request token → browser approval → session creation) to access user-specific data. Session persisted in localStorage. Rated movie IDs are cached in localStorage with a 1-hour TTL. `categorizeMovies` checks watched status first (before mismatch/cutoff) so rated movies are always filtered regardless of verification status.
+
 ## Deployment
 
-GitHub Actions workflow (`.github/workflows/deploy.yml`) runs type-check, lint, format check, and tests before building. Deploys to GitHub Pages on every push to `main`. The `base` in `vite.config.ts` must match the GitHub repo name (`/cinefilter/`).
+GitHub Actions workflow (`.github/workflows/deploy.yml`) runs type-check, lint, format check, and tests (with coverage thresholds) before building. Deploys to GitHub Pages on every push to `master` or `main`. The `base` in `vite.config.ts` must match the GitHub repo name (`/cinefilter/`).
 
 ## Tooling
 

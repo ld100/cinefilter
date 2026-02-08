@@ -61,17 +61,6 @@
   max-height: calc(100vh - 53px);
 }
 
-.error {
-  padding: 12px 16px;
-  background: rgba(200, 50, 50, 0.1);
-  border: 1px solid rgba(200, 50, 50, 0.3);
-  border-radius: 4px;
-  color: var(--error);
-  font-size: 12px;
-  font-family: var(--font-mono);
-  margin-bottom: 16px;
-}
-
 /* Toolbar */
 .toolbar {
   display: flex;
@@ -86,35 +75,6 @@
   font-family: var(--font-mono);
   font-size: 13px;
   color: var(--text-dim);
-}
-
-/* Pagination */
-.pagination {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.pageBtn {
-  padding: 4px 12px;
-  background: var(--bg-input);
-  border: 1px solid var(--border-input);
-  border-radius: 3px;
-  color: var(--text-muted);
-  font-size: 12px;
-  cursor: pointer;
-  transition: border-color 0.15s;
-}
-
-.pageBtn:hover {
-  border-color: var(--text-dim);
-}
-
-.pageInfo {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text-faint);
-  padding: 4px 0;
 }
 
 .bottomPagination {

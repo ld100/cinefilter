@@ -69,4 +69,40 @@ describe("FilterPanel", () => {
     );
     expect(screen.getByText("Disconnect TMDB")).toBeInTheDocument();
   });
+
+  it("shows spinner when connecting", () => {
+    render(<FilterPanel {...defaultProps} authStep="connecting" />);
+    expect(screen.getByText("Connecting to TMDB account...")).toBeInTheDocument();
+  });
+
+  it("shows error message and retry button on auth error", () => {
+    render(<FilterPanel {...defaultProps} authStep="error" authError="Token expired" />);
+    expect(screen.getByText("Token expired")).toBeInTheDocument();
+    expect(screen.getByText("Try again")).toBeInTheDocument();
+  });
+
+  it("disables search button when loadingRated is true", () => {
+    render(
+      <FilterPanel
+        {...defaultProps}
+        authStep="connected"
+        tmdbSession={{ sessionId: "s", accountId: 1 }}
+        loadingRated={true}
+      />,
+    );
+    const btn = screen.getByRole("button", { name: /Fetching watch history/i });
+    expect(btn).toBeDisabled();
+  });
+
+  it("shows loading rated spinner when connected and loadingRated", () => {
+    render(
+      <FilterPanel
+        {...defaultProps}
+        authStep="connected"
+        tmdbSession={{ sessionId: "s", accountId: 1 }}
+        loadingRated={true}
+      />,
+    );
+    expect(screen.getByText("Loading rated list...")).toBeInTheDocument();
+  });
 });

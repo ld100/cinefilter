@@ -1,3 +1,13 @@
+/**
+ * TMDB session management hook — handles the full auth lifecycle.
+ *
+ * State machine: idle → awaiting_approval → connecting → connected (+ error from any step)
+ *
+ * Persistence strategy:
+ *   - Session (sessionId + accountId) is stored in localStorage and restored on mount.
+ *   - Rated movie IDs are cached in localStorage with a 1-hour TTL to avoid
+ *     refetching on every search while still picking up newly rated movies.
+ */
 import { useState, useCallback, useEffect } from "react";
 import type { AuthStep, TmdbSession } from "../types";
 import {

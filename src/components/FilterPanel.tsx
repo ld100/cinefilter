@@ -162,7 +162,7 @@ export default function FilterPanel({
 
       {/* Hide watched */}
       <section className={styles.section}>
-        <label className={styles.label}>Hide Watched</label>
+        <span className={styles.label}>Hide Watched</span>
         {authStep === "idle" && (
           <label className={styles.checkboxLabel}>
             <input
