@@ -25,6 +25,8 @@ describe("FilterPanel", () => {
     expect(screen.getByText("Minimum Rating (TMDB pre-filter)")).toBeInTheDocument();
     expect(screen.getByText(/IMDB Cutoff/)).toBeInTheDocument();
     expect(screen.getByText(/Exclude Genres/)).toBeInTheDocument();
+    expect(screen.getByText(/Exclude Languages/)).toBeInTheDocument();
+    expect(screen.getByText(/Exclude Countries/)).toBeInTheDocument();
     expect(screen.getByText("Watch Region")).toBeInTheDocument();
     expect(screen.getByText(/Streaming Services/)).toBeInTheDocument();
     expect(screen.getByText("Results Per Page")).toBeInTheDocument();
@@ -141,6 +143,21 @@ describe("FilterPanel", () => {
     );
     await user.click(screen.getByText("Disconnect TMDB"));
     expect(onDisconnectTmdb).toHaveBeenCalledOnce();
+  });
+
+  it("renders language chip buttons", () => {
+    render(<FilterPanel {...defaultProps} />);
+    expect(screen.getByText("English")).toBeInTheDocument();
+    expect(screen.getByText("Hindi")).toBeInTheDocument();
+    expect(screen.getByText("Korean")).toBeInTheDocument();
+  });
+
+  it("renders country chip buttons", () => {
+    render(<FilterPanel {...defaultProps} />);
+    const countryGroup = screen.getByRole("group", { name: "Exclude countries" });
+    expect(countryGroup).toBeInTheDocument();
+    expect(screen.getByText("Argentina")).toBeInTheDocument();
+    expect(screen.getByText("Poland")).toBeInTheDocument();
   });
 
   it("calls onStartAuth when clicking 'Try again' on error", async () => {

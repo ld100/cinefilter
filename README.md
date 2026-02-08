@@ -18,6 +18,8 @@ TMDB's `release_date` filter considers all release dates across all countries �
 
 - **Year range filter** — uses `primary_release_date` on TMDB, then verifies against IMDB's original year
 - **Genre exclusion** — toggle genres to exclude (e.g. Family, Animation)
+- **Language exclusion** — exclude movies by original language (e.g. Hindi, Tamil, Telugu) to combat regional rating inflation
+- **Country exclusion** — exclude movies by country of origin (e.g. India, South Korea)
 - **Streaming provider filter** — filter by Netflix, Disney+, etc. (TMDB watch provider data powered by JustWatch)
 - **Watch region** — streaming availability varies by country
 - **Rating threshold** — TMDB pre-filter slider + optional post-verification IMDB cutoff slider
@@ -104,7 +106,7 @@ src/
 ├── types/
 │   └── index.ts           Central type definitions
 ├── constants/
-│   └── index.ts           Genres, providers, regions, page sizes, defaults
+│   └── index.ts           Genres, providers, regions, languages, countries, page sizes, defaults
 ├── services/
 │   ├── tmdb.ts            TMDB API client (discover, movie details)
 │   ├── omdb.ts            OMDb API client (year/rating lookup)
@@ -133,7 +135,7 @@ src/
 └── main.tsx               Entry point (wraps App with ErrorBoundary)
 ```
 
-**Data flow:** FilterPanel -> useMovieSearch -> TMDB discover (multi-page) -> per-movie TMDB details (IMDB ID + streaming) -> OMDb verification -> categorizeMovies (watched / mismatch / belowCutoff / visible) -> MovieCard with status badge.
+**Data flow:** FilterPanel -> useMovieSearch -> TMDB discover (multi-page, with language/country exclusions) -> per-movie TMDB details (IMDB ID + streaming) -> OMDb verification -> categorizeMovies (watched / mismatch / belowCutoff / visible) -> MovieCard with status badge.
 
 Verification is sequential (not parallel) to stay within OMDb's rate limits on the free tier.
 

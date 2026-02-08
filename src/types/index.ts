@@ -91,12 +91,24 @@ export interface WatchRegion {
   name: string;
 }
 
+export interface Language {
+  id: string;
+  name: string;
+}
+
+export interface Country {
+  id: string;
+  name: string;
+}
+
 export type PageSize = 10 | 20 | 50 | 100;
 
 export interface Filters {
   yearFrom: number;
   yearTo: number;
   excludedGenres: number[];
+  excludedLanguages: string[];
+  excludedCountries: string[];
   selectedProviders: number[];
   watchRegion: string;
   minRating: number;

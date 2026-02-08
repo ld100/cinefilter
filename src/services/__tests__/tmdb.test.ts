@@ -52,6 +52,45 @@ describe("discoverMovies", () => {
     expect(url.searchParams.get("watch_region")).toBe("US");
   });
 
+  it("includes excluded languages when present", async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ results: [], total_pages: 0, total_results: 0 }),
+    });
+
+    const filters = { ...mockFilters, excludedLanguages: ["hi", "ta", "te"] };
+    await discoverMovies("testkey", filters, 1, undefined, mockFetch);
+
+    const url = new URL(mockFetch.mock.calls[0][0]);
+    expect(url.searchParams.get("without_original_language")).toBe("hi,ta,te");
+  });
+
+  it("includes excluded countries when present", async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ results: [], total_pages: 0, total_results: 0 }),
+    });
+
+    const filters = { ...mockFilters, excludedCountries: ["IN", "KR"] };
+    await discoverMovies("testkey", filters, 1, undefined, mockFetch);
+
+    const url = new URL(mockFetch.mock.calls[0][0]);
+    expect(url.searchParams.get("without_origin_country")).toBe("IN,KR");
+  });
+
+  it("omits language/country params when arrays are empty", async () => {
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ results: [], total_pages: 0, total_results: 0 }),
+    });
+
+    await discoverMovies("testkey", mockFilters, 1, undefined, mockFetch);
+
+    const url = new URL(mockFetch.mock.calls[0][0]);
+    expect(url.searchParams.has("without_original_language")).toBe(false);
+    expect(url.searchParams.has("without_origin_country")).toBe(false);
+  });
+
   it("throws on HTTP error", async () => {
     const mockFetch = vi.fn().mockResolvedValue({
       ok: false,

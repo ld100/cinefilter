@@ -58,6 +58,12 @@ export async function discoverMovies(
   if (filters.excludedGenres.length > 0) {
     params.without_genres = filters.excludedGenres.join(",");
   }
+  if (filters.excludedLanguages.length > 0) {
+    params.without_original_language = filters.excludedLanguages.join(",");
+  }
+  if (filters.excludedCountries.length > 0) {
+    params.without_origin_country = filters.excludedCountries.join(",");
+  }
   if (filters.selectedProviders.length > 0) {
     params.with_watch_providers = filters.selectedProviders.join("|");
     params.watch_region = filters.watchRegion;

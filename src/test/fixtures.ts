@@ -43,6 +43,8 @@ export const mockFilters: Filters = {
   yearFrom: 2022,
   yearTo: 2026,
   excludedGenres: [],
+  excludedLanguages: [],
+  excludedCountries: [],
   selectedProviders: [],
   watchRegion: "US",
   minRating: 7.0,

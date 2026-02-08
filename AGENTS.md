@@ -40,9 +40,9 @@ Always run `npm run type-check`, `npm run lint`, and `npm test` before consideri
 ```
 src/
   types/index.ts          — Central type definitions
-  constants/index.ts      — Genres, providers, regions, page sizes, defaults
+  constants/index.ts      — Genres, providers, regions, languages, countries, page sizes, defaults
   services/               — API clients and business logic
-    tmdb.ts               — TMDB API client (uses primary_release_date)
+    tmdb.ts               — TMDB API client (uses primary_release_date, without_original_language, without_origin_country)
     omdb.ts               — OMDb API client
     tmdbAuth.ts           — TMDB authentication (3-step OAuth-like flow + rated movies)
     cache.ts              — In-memory cache with 15-min TTL

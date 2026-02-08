@@ -1,40 +1,34 @@
 import styles from "./MultiSelect.module.css";
 
-interface MultiSelectProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  options: { id: number; name: string; [key: string]: any }[];
-  selected: number[];
-  onToggle: (value: number) => void;
-  labelKey?: string;
-  valueKey?: string;
+interface MultiSelectProps<T extends string | number> {
+  options: { id: T; name: string }[];
+  selected: T[];
+  onToggle: (value: T) => void;
   compact?: boolean;
   label?: string;
 }
 
-export default function MultiSelect({
+export default function MultiSelect<T extends string | number>({
   options,
   selected,
   onToggle,
-  labelKey = "name",
-  valueKey = "id",
   compact = false,
   label,
-}: MultiSelectProps) {
+}: MultiSelectProps<T>) {
   return (
     <div className={styles.wrap} role="group" aria-label={label}>
       {options.map((opt) => {
-        const val = opt[valueKey] as number;
-        const isOn = selected.includes(val);
+        const isOn = selected.includes(opt.id);
         return (
           <button
-            key={val}
+            key={opt.id}
             type="button"
             role="checkbox"
             aria-checked={isOn}
             className={`${styles.chip} ${isOn ? styles.active : ""} ${compact ? styles.compact : ""}`}
-            onClick={() => onToggle(val)}
+            onClick={() => onToggle(opt.id)}
           >
-            {String(opt[labelKey])}
+            {opt.name}
           </button>
         );
       })}

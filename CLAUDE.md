@@ -28,9 +28,9 @@ npm run test:coverage # run tests with coverage report
 
 ## Architecture
 
-- `src/types/index.ts` — Central type definitions: `TmdbMovie`, `EnrichedMovie`, `Filters`, `VerifyStatus`, `ApiKeys`, etc.
-- `src/constants/index.ts` — Genre list, streaming provider IDs, watch regions, page sizes, default filter values.
-- `src/services/tmdb.ts` — TMDB API client. Uses `primary_release_date` (not `release_date`) to avoid re-release date pollution. Injectable `fetchFn` for testability. Results cached via `tmdbCache`.
+- `src/types/index.ts` — Central type definitions: `TmdbMovie`, `EnrichedMovie`, `Filters` (includes `excludedLanguages`, `excludedCountries`), `VerifyStatus`, `ApiKeys`, `Language`, `Country`, etc.
+- `src/constants/index.ts` — Genre list, streaming provider IDs, watch regions, languages (ISO 639-1), countries (ISO 3166-1), page sizes, default filter values.
+- `src/services/tmdb.ts` — TMDB API client. Uses `primary_release_date` (not `release_date`) to avoid re-release date pollution. Supports `without_original_language` and `without_origin_country` exclusion params. Injectable `fetchFn` for testability. Results cached via `tmdbCache`.
 - `src/services/omdb.ts` — OMDb API client. Verifies IMDB year and fetches real IMDB rating. Injectable `fetchFn`. Results cached via `omdbCache`.
 - `src/services/tmdbAuth.ts` — TMDB authentication service. Implements the 3-step OAuth-like flow (request token → user approval → session) and paginated rated-movies fetch.
 - `src/services/cache.ts` — In-memory API response cache with configurable TTL (default 15 min). Exports `tmdbCache` and `omdbCache` singletons.
@@ -44,7 +44,7 @@ npm run test:coverage # run tests with coverage report
   - `FilterPanel.tsx` — Filter controls with debounced inputs for year range and vote count. Includes Hide Watched section with TMDB auth flow UI.
   - `MovieCard.tsx` — Individual movie display with verification status badge.
   - `MovieCardSkeleton.tsx` — Shimmer loading skeleton matching MovieCard layout.
-  - `MultiSelect.tsx` — Toggle chip selector for genres and providers.
+  - `MultiSelect.tsx` — Generic toggle chip selector for genres, providers, languages, and countries. Supports both `number` and `string` ID types.
   - `RatingSlider.tsx` — Range slider for rating thresholds.
   - `Pagination.tsx` — Page navigation controls (prev/next with page info).
   - `ApiKeySetup.tsx` — Initial API key entry form.
@@ -52,7 +52,7 @@ npm run test:coverage # run tests with coverage report
   - `Toast.tsx` — Fixed-position toast notification display.
 - `src/main.tsx` — Entry point. Wraps App with ErrorBoundary.
 
-**Data flow:** FilterPanel → useMovieSearch → TMDB discover (multi-page) → per-movie TMDB details (IMDB ID + streaming) → OMDb verification → categorizeMovies (watched / mismatch / belowCutoff / visible) → MovieCard with status badge.
+**Data flow:** FilterPanel → useMovieSearch → TMDB discover (multi-page, with language/country exclusions) → per-movie TMDB details (IMDB ID + streaming) → OMDb verification → categorizeMovies (watched / mismatch / belowCutoff / visible) → MovieCard with status badge.
 
 ## Testing
 

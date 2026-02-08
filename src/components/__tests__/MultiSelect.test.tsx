@@ -36,4 +36,19 @@ describe("MultiSelect", () => {
     const btn = screen.getByText("Option A");
     expect(btn.className).toContain("compact");
   });
+
+  it("renders and toggles correctly with string ID options", async () => {
+    const user = userEvent.setup();
+    const stringOptions = [
+      { id: "en", name: "English" },
+      { id: "hi", name: "Hindi" },
+      { id: "ko", name: "Korean" },
+    ];
+    const onToggle = vi.fn();
+    render(<MultiSelect options={stringOptions} selected={["hi"]} onToggle={onToggle} />);
+    expect(screen.getByText("English")).toBeInTheDocument();
+    expect(screen.getByText("Hindi").className).toContain("active");
+    await user.click(screen.getByText("Korean"));
+    expect(onToggle).toHaveBeenCalledWith("ko");
+  });
 });

@@ -8,7 +8,15 @@ import {
 import MultiSelect from "./MultiSelect";
 import RatingSlider from "./RatingSlider";
 import useDebounce from "../hooks/useDebounce";
-import { GENRES, PROVIDERS, WATCH_REGIONS, CURRENT_YEAR, PAGE_SIZES } from "../constants";
+import {
+  GENRES,
+  LANGUAGES,
+  COUNTRIES,
+  PROVIDERS,
+  WATCH_REGIONS,
+  CURRENT_YEAR,
+  PAGE_SIZES,
+} from "../constants";
 import type { AuthStep, Filters, TmdbSession } from "../types";
 import styles from "./FilterPanel.module.css";
 
@@ -48,6 +56,17 @@ export default function FilterPanel({
 
   const toggleIn = useCallback(
     (key: "excludedGenres" | "selectedProviders") => (id: number) =>
+      onChange((prev) => ({
+        ...prev,
+        [key]: prev[key].includes(id)
+          ? prev[key].filter((x) => x !== id)
+          : [...prev[key], id],
+      })),
+    [onChange],
+  );
+
+  const toggleStr = useCallback(
+    (key: "excludedLanguages" | "excludedCountries") => (id: string) =>
       onChange((prev) => ({
         ...prev,
         [key]: prev[key].includes(id)
@@ -251,6 +270,36 @@ export default function FilterPanel({
           compact
           label="Exclude genres"
         />
+      </section>
+
+      {/* Exclude languages */}
+      <section className={styles.section}>
+        <label className={styles.label}>
+          Exclude Languages <span className={styles.labelHint}>(click to toggle)</span>
+        </label>
+        <MultiSelect
+          options={LANGUAGES}
+          selected={filters.excludedLanguages}
+          onToggle={toggleStr("excludedLanguages")}
+          compact
+          label="Exclude languages"
+        />
+        <p className={styles.hint}>Exclude movies by original language</p>
+      </section>
+
+      {/* Exclude countries */}
+      <section className={styles.section}>
+        <label className={styles.label}>
+          Exclude Countries <span className={styles.labelHint}>(click to toggle)</span>
+        </label>
+        <MultiSelect
+          options={COUNTRIES}
+          selected={filters.excludedCountries}
+          onToggle={toggleStr("excludedCountries")}
+          compact
+          label="Exclude countries"
+        />
+        <p className={styles.hint}>Exclude movies by country of origin</p>
       </section>
 
       {/* Watch region */}

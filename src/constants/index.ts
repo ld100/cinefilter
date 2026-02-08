@@ -1,4 +1,12 @@
-import type { Genre, Provider, WatchRegion, Filters, PageSize } from "../types";
+import type {
+  Genre,
+  Provider,
+  WatchRegion,
+  Language,
+  Country,
+  Filters,
+  PageSize,
+} from "../types";
 
 export const CURRENT_YEAR = new Date().getFullYear();
 
@@ -59,6 +67,56 @@ export const WATCH_REGIONS: WatchRegion[] = [
   { code: "KR", name: "South Korea" },
 ];
 
+export const LANGUAGES: Language[] = [
+  { id: "en", name: "English" },
+  { id: "es", name: "Spanish" },
+  { id: "fr", name: "French" },
+  { id: "de", name: "German" },
+  { id: "it", name: "Italian" },
+  { id: "pt", name: "Portuguese" },
+  { id: "ja", name: "Japanese" },
+  { id: "ko", name: "Korean" },
+  { id: "zh", name: "Chinese" },
+  { id: "hi", name: "Hindi" },
+  { id: "ta", name: "Tamil" },
+  { id: "te", name: "Telugu" },
+  { id: "ml", name: "Malayalam" },
+  { id: "kn", name: "Kannada" },
+  { id: "ru", name: "Russian" },
+  { id: "ar", name: "Arabic" },
+  { id: "tr", name: "Turkish" },
+  { id: "th", name: "Thai" },
+  { id: "sv", name: "Swedish" },
+  { id: "da", name: "Danish" },
+  { id: "nl", name: "Dutch" },
+  { id: "pl", name: "Polish" },
+];
+
+export const COUNTRIES: Country[] = [
+  { id: "US", name: "United States" },
+  { id: "GB", name: "United Kingdom" },
+  { id: "FR", name: "France" },
+  { id: "DE", name: "Germany" },
+  { id: "IT", name: "Italy" },
+  { id: "ES", name: "Spain" },
+  { id: "CA", name: "Canada" },
+  { id: "AU", name: "Australia" },
+  { id: "JP", name: "Japan" },
+  { id: "KR", name: "South Korea" },
+  { id: "IN", name: "India" },
+  { id: "CN", name: "China" },
+  { id: "BR", name: "Brazil" },
+  { id: "MX", name: "Mexico" },
+  { id: "RU", name: "Russia" },
+  { id: "TR", name: "Turkey" },
+  { id: "TH", name: "Thailand" },
+  { id: "SE", name: "Sweden" },
+  { id: "DK", name: "Denmark" },
+  { id: "NL", name: "Netherlands" },
+  { id: "AR", name: "Argentina" },
+  { id: "PL", name: "Poland" },
+];
+
 export const PAGE_SIZES: PageSize[] = [10, 20, 50, 100];
 export const DEFAULT_PAGE_SIZE: PageSize = 100;
 
@@ -66,6 +124,8 @@ export const DEFAULT_FILTERS: Filters = {
   yearFrom: CURRENT_YEAR - 3,
   yearTo: CURRENT_YEAR,
   excludedGenres: [10751],
+  excludedLanguages: [],
+  excludedCountries: [],
   selectedProviders: [],
   watchRegion: "US",
   minRating: 7.0,
