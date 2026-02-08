@@ -88,6 +88,8 @@ describe("useMovieSearch", () => {
       rating: 8.0,
       ratingStr: "8.0",
       rawYear: "2024",
+      director: null,
+      actors: null,
     });
 
     const { result } = renderHook(() => useMovieSearch({ tmdbKey: "tk", omdbKey: "ok" }));
@@ -223,6 +225,8 @@ describe("useMovieSearch", () => {
       rating: 9.0,
       ratingStr: "9.0",
       rawYear: "1994",
+      director: null,
+      actors: null,
     });
 
     const { result } = renderHook(() => useMovieSearch({ tmdbKey: "tk", omdbKey: "ok" }));

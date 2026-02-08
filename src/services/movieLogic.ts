@@ -52,6 +52,8 @@ export function buildVerificationResult(
       imdbYear: null,
       imdbRating: null,
       imdbRatingStr: null,
+      director: null,
+      actors: null,
       _status: "verified",
     };
   }
@@ -65,6 +67,8 @@ export function buildVerificationResult(
     imdbYear: omdbResult.year ? String(omdbResult.year) : null,
     imdbRating: omdbResult.rating,
     imdbRatingStr: omdbResult.ratingStr ?? null,
+    director: omdbResult.director,
+    actors: omdbResult.actors,
     _status: inRange ? "verified" : "mismatch",
   };
 }

@@ -39,5 +39,7 @@ export function parseOmdbResult(omdb: OmdbResponse): ParsedOmdbResult {
   const year = parsed !== null && !isNaN(parsed) ? parsed : null;
   const rating =
     omdb.imdbRating && omdb.imdbRating !== "N/A" ? parseFloat(omdb.imdbRating) : null;
-  return { year, rating, ratingStr: omdb.imdbRating, rawYear };
+  const director = omdb.Director && omdb.Director !== "N/A" ? omdb.Director : null;
+  const actors = omdb.Actors && omdb.Actors !== "N/A" ? omdb.Actors : null;
+  return { year, rating, ratingStr: omdb.imdbRating, rawYear, director, actors };
 }

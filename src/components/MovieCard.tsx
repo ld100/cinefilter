@@ -4,6 +4,7 @@ import styles from "./MovieCard.module.css";
 
 const TMDB_IMG = "https://image.tmdb.org/t/p/w154";
 const IMDB_URL = "https://www.imdb.com/title/";
+const TMDB_MOVIE_URL = "https://www.themoviedb.org/movie/";
 
 interface MovieCardProps {
   movie: EnrichedMovie;
@@ -71,6 +72,22 @@ function MovieCard({ movie, status }: MovieCardProps) {
           )}
         </div>
 
+        {/* Crew */}
+        {(movie.director || movie.actors) && (
+          <div className={styles.crew}>
+            {movie.director && (
+              <span className={styles.crewLine}>
+                <span className={styles.crewLabel}>DIR</span> {movie.director}
+              </span>
+            )}
+            {movie.actors && (
+              <span className={styles.crewLine}>
+                <span className={styles.crewLabel}>CAST</span> {movie.actors}
+              </span>
+            )}
+          </div>
+        )}
+
         {/* Genres */}
         <div className={styles.genres}>
           {(movie.genreNames || []).map((g) => (
@@ -107,6 +124,28 @@ function MovieCard({ movie, status }: MovieCardProps) {
             ))}
           </div>
         )}
+
+        {/* External links */}
+        <div className={styles.externalLinks}>
+          {movie.imdbId && (
+            <a
+              href={`${IMDB_URL}${movie.imdbId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.extLink}
+            >
+              IMDB
+            </a>
+          )}
+          <a
+            href={`${TMDB_MOVIE_URL}${movie.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.extLink}
+          >
+            TMDB
+          </a>
+        </div>
       </div>
     </article>
   );

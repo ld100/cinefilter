@@ -8,12 +8,16 @@ describe("parseOmdbResult", () => {
       Response: "True",
       Year: "2024",
       imdbRating: "7.8",
+      Director: "Christopher Nolan",
+      Actors: "Leonardo DiCaprio, Tom Hardy",
     });
     expect(result).toEqual({
       year: 2024,
       rating: 7.8,
       ratingStr: "7.8",
       rawYear: "2024",
+      director: "Christopher Nolan",
+      actors: "Leonardo DiCaprio, Tom Hardy",
     });
   });
 

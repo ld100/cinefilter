@@ -42,6 +42,8 @@ export interface OmdbResponse {
   Year?: string;
   imdbRating?: string;
   imdbID?: string;
+  Director?: string;
+  Actors?: string;
   Error?: string;
 }
 
@@ -50,6 +52,8 @@ export interface ParsedOmdbResult {
   rating: number | null;
   ratingStr: string | undefined;
   rawYear: string | null;
+  director: string | null;
+  actors: string | null;
 }
 
 // --- Verification ---
@@ -64,6 +68,8 @@ export interface EnrichedMovie extends TmdbMovie {
   imdbYear?: string | null;
   imdbRating?: number | null;
   imdbRatingStr?: string | null;
+  director?: string | null;
+  actors?: string | null;
   _status?: VerifyStatus;
   _errorMessage?: string;
 }

@@ -2,6 +2,8 @@
 
 **[Live Demo](https://ld100.github.io/cinefilter/)**
 
+<img src="docs/cinefilter-screenshot.png" alt="CineFilter screenshot" width="720" />
+
 Movie discovery tool that solves the re-release date problem in TMDB.
 
 Uses TMDB's Discover API for searching (genres, year range, streaming providers, rating threshold), then cross-verifies every result against OMDb (which serves actual IMDB data) to catch movies whose TMDB date was polluted by re-releases, Blu-ray editions, or digital distribution dates.

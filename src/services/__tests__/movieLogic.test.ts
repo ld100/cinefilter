@@ -67,6 +67,8 @@ describe("buildVerificationResult", () => {
       rating: 7.8,
       ratingStr: "7.8",
       rawYear: "2024",
+      director: "Test Director",
+      actors: "Actor One, Actor Two",
     };
     const result = buildVerificationResult(
       mockEnrichedMovie,
@@ -77,6 +79,8 @@ describe("buildVerificationResult", () => {
     );
     expect(result._status).toBe("verified");
     expect(result.imdbRating).toBe(7.8);
+    expect(result.director).toBe("Test Director");
+    expect(result.actors).toBe("Actor One, Actor Two");
   });
 
   it("marks as mismatch when year is out of range", () => {
@@ -85,6 +89,8 @@ describe("buildVerificationResult", () => {
       rating: 8.0,
       ratingStr: "8.0",
       rawYear: "1995",
+      director: null,
+      actors: null,
     };
     const result = buildVerificationResult(
       mockEnrichedMovie,

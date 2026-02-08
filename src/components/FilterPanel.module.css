@@ -68,7 +68,7 @@
 }
 
 .votesInput {
-  width: 64px;
+  width: 84px;
   padding: 3px 6px;
   background: var(--bg-input);
   border: 1px solid var(--border-input);
