@@ -79,7 +79,7 @@
 }
 
 .checking {
-  color: var(--text-dim);
+  color: var(--text-muted);
 }
 
 .verified {
@@ -127,7 +127,7 @@
   padding: 2px 7px;
   border: 1px solid var(--border-input);
   border-radius: 2px;
-  color: var(--text-dim);
+  color: var(--text-muted);
   font-family: var(--font-body);
   letter-spacing: 0.5px;
   text-transform: uppercase;
@@ -137,7 +137,7 @@
   margin: 8px 0 0;
   font-size: 12px;
   line-height: 1.5;
-  color: var(--text-dim);
+  color: var(--text-muted);
   cursor: pointer;
   overflow: hidden;
   display: -webkit-box;
@@ -171,7 +171,7 @@
 .provider {
   font-size: 12px;
   padding: 2px 6px;
-  background: rgba(232, 197, 71, 0.08);
+  background: var(--accent-subtle);
   border: 1px solid var(--accent-border);
   border-radius: 2px;
   color: var(--accent-text);

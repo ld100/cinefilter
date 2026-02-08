@@ -16,7 +16,7 @@
 }
 
 .pageBtn:hover:not(:disabled) {
-  border-color: var(--text-dim);
+  border-color: var(--text-muted);
 }
 
 .pageBtn:disabled {

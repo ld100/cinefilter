@@ -18,7 +18,7 @@
 }
 
 .chip:hover {
-  border-color: var(--text-dim);
+  border-color: var(--text-muted);
 }
 
 .chip.active {
