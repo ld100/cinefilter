@@ -41,4 +41,16 @@ describe("Pagination", () => {
     await user.click(screen.getByText("Next →"));
     expect(onNavigate).toHaveBeenCalledWith(4);
   });
+
+  it("disables buttons when loading", () => {
+    render(<Pagination page={3} totalPages={5} onNavigate={vi.fn()} loading={true} />);
+    expect(screen.getByText("← Prev")).toBeDisabled();
+    expect(screen.getByText("Next →")).toBeDisabled();
+  });
+
+  it("enables buttons when not loading", () => {
+    render(<Pagination page={3} totalPages={5} onNavigate={vi.fn()} loading={false} />);
+    expect(screen.getByText("← Prev")).not.toBeDisabled();
+    expect(screen.getByText("Next →")).not.toBeDisabled();
+  });
 });

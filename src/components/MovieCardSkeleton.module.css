@@ -11,7 +11,12 @@
   width: 92px;
   min-height: 138px;
   border-radius: 3px;
-  background: linear-gradient(90deg, #1a1a1a 25%, #222 50%, #1a1a1a 75%);
+  background: linear-gradient(
+    90deg,
+    var(--bg-skeleton) 25%,
+    var(--bg-skeleton-highlight) 50%,
+    var(--bg-skeleton) 75%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -27,7 +32,12 @@
   height: 18px;
   width: 60%;
   border-radius: 3px;
-  background: linear-gradient(90deg, #1a1a1a 25%, #222 50%, #1a1a1a 75%);
+  background: linear-gradient(
+    90deg,
+    var(--bg-skeleton) 25%,
+    var(--bg-skeleton-highlight) 50%,
+    var(--bg-skeleton) 75%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -36,7 +46,12 @@
   height: 14px;
   width: 30%;
   border-radius: 3px;
-  background: linear-gradient(90deg, #1a1a1a 25%, #222 50%, #1a1a1a 75%);
+  background: linear-gradient(
+    90deg,
+    var(--bg-skeleton) 25%,
+    var(--bg-skeleton-highlight) 50%,
+    var(--bg-skeleton) 75%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -50,7 +65,12 @@
   height: 20px;
   width: 56px;
   border-radius: 2px;
-  background: linear-gradient(90deg, #1a1a1a 25%, #222 50%, #1a1a1a 75%);
+  background: linear-gradient(
+    90deg,
+    var(--bg-skeleton) 25%,
+    var(--bg-skeleton-highlight) 50%,
+    var(--bg-skeleton) 75%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -59,7 +79,12 @@
   height: 12px;
   width: 100%;
   border-radius: 3px;
-  background: linear-gradient(90deg, #1a1a1a 25%, #222 50%, #1a1a1a 75%);
+  background: linear-gradient(
+    90deg,
+    var(--bg-skeleton) 25%,
+    var(--bg-skeleton-highlight) 50%,
+    var(--bg-skeleton) 75%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -68,7 +93,12 @@
   height: 12px;
   width: 75%;
   border-radius: 3px;
-  background: linear-gradient(90deg, #1a1a1a 25%, #222 50%, #1a1a1a 75%);
+  background: linear-gradient(
+    90deg,
+    var(--bg-skeleton) 25%,
+    var(--bg-skeleton-highlight) 50%,
+    var(--bg-skeleton) 75%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }

@@ -15,8 +15,13 @@
   transition: border-color 0.15s;
 }
 
-.pageBtn:hover {
+.pageBtn:hover:not(:disabled) {
   border-color: var(--text-dim);
+}
+
+.pageBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .pageInfo {

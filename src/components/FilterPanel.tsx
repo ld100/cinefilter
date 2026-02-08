@@ -1,4 +1,10 @@
-import { useState, useEffect, type Dispatch, type SetStateAction } from "react";
+import {
+  useState,
+  useEffect,
+  useCallback,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import MultiSelect from "./MultiSelect";
 import RatingSlider from "./RatingSlider";
 import useDebounce from "../hooks/useDebounce";
@@ -33,18 +39,23 @@ export default function FilterPanel({
   onConfirmApproval,
   onDisconnectTmdb,
 }: FilterPanelProps) {
-  const set =
+  const set = useCallback(
     <K extends keyof Filters>(key: K) =>
-    (val: Filters[K]) =>
-      onChange((prev) => ({ ...prev, [key]: val }));
+      (val: Filters[K]) =>
+        onChange((prev) => ({ ...prev, [key]: val })),
+    [onChange],
+  );
 
-  const toggleIn = (key: "excludedGenres" | "selectedProviders") => (id: number) =>
-    onChange((prev) => ({
-      ...prev,
-      [key]: prev[key].includes(id)
-        ? prev[key].filter((x) => x !== id)
-        : [...prev[key], id],
-    }));
+  const toggleIn = useCallback(
+    (key: "excludedGenres" | "selectedProviders") => (id: number) =>
+      onChange((prev) => ({
+        ...prev,
+        [key]: prev[key].includes(id)
+          ? prev[key].filter((x) => x !== id)
+          : [...prev[key], id],
+      })),
+    [onChange],
+  );
 
   // Debounced year inputs
   const [localYearFrom, setLocalYearFrom] = useState(filters.yearFrom);
@@ -57,15 +68,15 @@ export default function FilterPanel({
 
   useEffect(() => {
     set("yearFrom")(debouncedYearFrom);
-  }, [debouncedYearFrom]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [debouncedYearFrom, set]);
 
   useEffect(() => {
     set("yearTo")(debouncedYearTo);
-  }, [debouncedYearTo]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [debouncedYearTo, set]);
 
   useEffect(() => {
     set("minVotes")(debouncedMinVotes);
-  }, [debouncedMinVotes]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [debouncedMinVotes, set]);
 
   return (
     <aside className={styles.panel}>

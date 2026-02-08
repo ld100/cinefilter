@@ -104,8 +104,13 @@ export default function useMovieSearch({ tmdbKey, omdbKey }: ApiKeys) {
         const parsed = parseOmdbResult(omdb);
 
         return buildVerificationResult(movie, parsed, imdbId, providers, filters);
-      } catch {
-        return { ...movie, streamingProviders: [], _status: "error" };
+      } catch (err) {
+        return {
+          ...movie,
+          streamingProviders: [],
+          _status: "error",
+          _errorMessage: err instanceof Error ? err.message : "Verification failed",
+        };
       }
     },
     [tmdbKey, omdbKey],

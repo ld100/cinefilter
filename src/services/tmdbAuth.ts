@@ -93,7 +93,7 @@ export async function fetchAllRatedMovieIds(
     }
     totalPages = data.total_pages;
     page++;
-  } while (page <= totalPages);
+  } while (page <= Math.min(totalPages, 500));
 
   return ids;
 }

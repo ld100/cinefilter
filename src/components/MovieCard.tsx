@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import type { EnrichedMovie, VerifyStatus } from "../types";
 import styles from "./MovieCard.module.css";
 
@@ -10,7 +10,7 @@ interface MovieCardProps {
   status: VerifyStatus;
 }
 
-export default function MovieCard({ movie, status }: MovieCardProps) {
+function MovieCard({ movie, status }: MovieCardProps) {
   const [expanded, setExpanded] = useState(false);
   const isMismatch = status === "mismatch";
   const isVerified = status === "verified";
@@ -82,21 +82,14 @@ export default function MovieCard({ movie, status }: MovieCardProps) {
 
         {/* Overview */}
         {movie.overview && (
-          <p
+          <button
+            type="button"
             className={`${styles.overview} ${expanded ? styles.expanded : ""}`}
             onClick={() => setExpanded((p) => !p)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                setExpanded((p) => !p);
-              }
-            }}
-            role="button"
-            tabIndex={0}
             aria-expanded={expanded}
           >
             {movie.overview}
-          </p>
+          </button>
         )}
 
         {/* Streaming providers */}
@@ -118,3 +111,5 @@ export default function MovieCard({ movie, status }: MovieCardProps) {
     </article>
   );
 }
+
+export default memo(MovieCard);

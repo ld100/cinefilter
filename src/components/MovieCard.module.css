@@ -17,14 +17,14 @@
   min-height: 138px;
   border-radius: 3px;
   object-fit: cover;
-  background: #1a1a1a;
+  background: var(--bg-skeleton);
 }
 
 .noPoster {
   width: 92px;
   min-height: 138px;
   border-radius: 3px;
-  background: #1a1a1a;
+  background: var(--bg-skeleton);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -143,6 +143,12 @@
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  background: none;
+  border: none;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
 }
 
 .overview.expanded {

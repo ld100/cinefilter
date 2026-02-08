@@ -4,9 +4,15 @@ interface PaginationProps {
   page: number;
   totalPages: number;
   onNavigate: (page: number) => void;
+  loading?: boolean;
 }
 
-export default function Pagination({ page, totalPages, onNavigate }: PaginationProps) {
+export default function Pagination({
+  page,
+  totalPages,
+  onNavigate,
+  loading,
+}: PaginationProps) {
   if (totalPages <= 1) return null;
   return (
     <div className={styles.pagination} role="navigation" aria-label="Pagination">
@@ -15,11 +21,12 @@ export default function Pagination({ page, totalPages, onNavigate }: PaginationP
           type="button"
           className={styles.pageBtn}
           onClick={() => onNavigate(page - 1)}
+          disabled={loading}
         >
           ← Prev
         </button>
       )}
-      <span className={styles.pageInfo}>
+      <span className={styles.pageInfo} aria-live="polite">
         {page}/{totalPages}
       </span>
       {page < totalPages && (
@@ -27,6 +34,7 @@ export default function Pagination({ page, totalPages, onNavigate }: PaginationP
           type="button"
           className={styles.pageBtn}
           onClick={() => onNavigate(page + 1)}
+          disabled={loading}
         >
           Next →
         </button>

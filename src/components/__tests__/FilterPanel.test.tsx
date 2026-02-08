@@ -105,4 +105,56 @@ describe("FilterPanel", () => {
     );
     expect(screen.getByText("Loading rated list...")).toBeInTheDocument();
   });
+
+  it("calls onStartAuth when checking Hide Watched without session", async () => {
+    const user = userEvent.setup();
+    const onStartAuth = vi.fn();
+    render(<FilterPanel {...defaultProps} onStartAuth={onStartAuth} />);
+    await user.click(screen.getByLabelText("Hide movies I've rated on TMDB"));
+    expect(onStartAuth).toHaveBeenCalledOnce();
+  });
+
+  it("calls onConfirmApproval when clicking 'I've approved it'", async () => {
+    const user = userEvent.setup();
+    const onConfirmApproval = vi.fn();
+    render(
+      <FilterPanel
+        {...defaultProps}
+        authStep="awaiting_approval"
+        onConfirmApproval={onConfirmApproval}
+      />,
+    );
+    await user.click(screen.getByText("I've approved it"));
+    expect(onConfirmApproval).toHaveBeenCalledOnce();
+  });
+
+  it("calls onDisconnectTmdb when clicking 'Disconnect TMDB'", async () => {
+    const user = userEvent.setup();
+    const onDisconnectTmdb = vi.fn();
+    render(
+      <FilterPanel
+        {...defaultProps}
+        authStep="connected"
+        tmdbSession={{ sessionId: "s", accountId: 1 }}
+        onDisconnectTmdb={onDisconnectTmdb}
+      />,
+    );
+    await user.click(screen.getByText("Disconnect TMDB"));
+    expect(onDisconnectTmdb).toHaveBeenCalledOnce();
+  });
+
+  it("calls onStartAuth when clicking 'Try again' on error", async () => {
+    const user = userEvent.setup();
+    const onStartAuth = vi.fn();
+    render(
+      <FilterPanel
+        {...defaultProps}
+        authStep="error"
+        authError="Token expired"
+        onStartAuth={onStartAuth}
+      />,
+    );
+    await user.click(screen.getByText("Try again"));
+    expect(onStartAuth).toHaveBeenCalledOnce();
+  });
 });

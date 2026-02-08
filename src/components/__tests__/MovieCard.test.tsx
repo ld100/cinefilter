@@ -41,7 +41,7 @@ describe("MovieCard", () => {
   it("expands overview on click", async () => {
     const user = userEvent.setup();
     render(<MovieCard movie={mockEnrichedMovie} status="checking" />);
-    const overview = screen.getByText("A test movie overview");
+    const overview = screen.getByRole("button", { name: "A test movie overview" });
     await user.click(overview);
     expect(overview.className).toContain("expanded");
   });

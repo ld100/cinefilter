@@ -158,8 +158,9 @@ describe("useMovieSearch", () => {
     });
 
     expect(result.current.movies).toHaveLength(1);
-    // The movie should still be present but with error status
+    // The movie should still be present but with error status and error message
     expect(result.current.verification[20]).toBe("error");
+    expect(result.current.movies[0]._errorMessage).toBe("timeout");
   });
 
   it("cancel aborts an in-progress search", async () => {

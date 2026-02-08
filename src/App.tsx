@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import ApiKeySetup from "./components/ApiKeySetup";
 import FilterPanel from "./components/FilterPanel";
 import MovieCard from "./components/MovieCard";
@@ -63,7 +63,7 @@ export default function App() {
     disconnect: disconnectTmdb,
   } = useTmdbSession(keys?.tmdbKey || "");
 
-  useEffect(() => cancel, [cancel]);
+  useEffect(() => () => cancel(), [cancel]);
 
   useEffect(() => {
     if (error) addToast(error, "error");
@@ -97,18 +97,16 @@ export default function App() {
     disconnectTmdb();
   };
 
+  const watchedIds = filters.hideWatched && ratedMovieIds ? ratedMovieIds : undefined;
+
+  const { visible, hidden, belowCutoff, watched } = useMemo(
+    () => categorizeMovies(movies, verification, filters.imdbCutoff, watchedIds),
+    [movies, verification, filters.imdbCutoff, watchedIds],
+  );
+
   if (!keys) {
     return <ApiKeySetup onSubmit={handleKeysSubmit} />;
   }
-
-  const watchedIds = filters.hideWatched && ratedMovieIds ? ratedMovieIds : undefined;
-
-  const { visible, hidden, belowCutoff, watched } = categorizeMovies(
-    movies,
-    verification,
-    filters.imdbCutoff,
-    watchedIds,
-  );
 
   return (
     <div className={styles.root}>
@@ -155,7 +153,12 @@ export default function App() {
                 {watched.length > 0 && ` · ${watched.length} watched`}
                 {stats.pending > 0 && ` · ${stats.pending} checking`}
               </div>
-              <Pagination page={page} totalPages={totalPages} onNavigate={handleSearch} />
+              <Pagination
+                page={page}
+                totalPages={totalPages}
+                onNavigate={handleSearch}
+                loading={loading}
+              />
             </div>
           )}
 
@@ -235,7 +238,12 @@ export default function App() {
           {/* Bottom pagination */}
           {movies.length > 0 && totalPages > 1 && (
             <div className={styles.bottomPagination}>
-              <Pagination page={page} totalPages={totalPages} onNavigate={handleSearch} />
+              <Pagination
+                page={page}
+                totalPages={totalPages}
+                onNavigate={handleSearch}
+                loading={loading}
+              />
             </div>
           )}
         </main>

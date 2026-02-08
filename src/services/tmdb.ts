@@ -18,7 +18,13 @@ export async function tmdbGet<T>(
     }
   }
 
-  const cacheKey = url.toString();
+  const cacheKey = ApiCache.buildKey(
+    "tmdb",
+    endpoint,
+    ...Object.entries(params)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .flat(),
+  );
   const cached = tmdbCache.get<T>(cacheKey);
   if (cached) return cached;
 

@@ -4,7 +4,7 @@
   border-right: 1px solid var(--border-subtle);
   padding: 20px;
   overflow-y: auto;
-  max-height: calc(100vh - 61px);
+  max-height: calc(100vh - var(--header-height) - 8px);
 }
 
 .section {
@@ -82,7 +82,7 @@
 .select {
   width: 100%;
   padding: 6px 8px;
-  background: #111;
+  background: var(--bg-select);
   border: 1px solid var(--border-input);
   border-radius: 3px;
   color: var(--text-secondary);

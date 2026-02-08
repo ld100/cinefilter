@@ -35,7 +35,8 @@ export async function getByImdbId(
  */
 export function parseOmdbResult(omdb: OmdbResponse): ParsedOmdbResult {
   const rawYear = omdb.Year ? omdb.Year.split("\u2013")[0].trim() : null;
-  const year = rawYear ? parseInt(rawYear, 10) : null;
+  const parsed = rawYear ? parseInt(rawYear, 10) : null;
+  const year = parsed !== null && !isNaN(parsed) ? parsed : null;
   const rating =
     omdb.imdbRating && omdb.imdbRating !== "N/A" ? parseFloat(omdb.imdbRating) : null;
   return { year, rating, ratingStr: omdb.imdbRating, rawYear };

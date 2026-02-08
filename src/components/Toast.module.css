@@ -21,14 +21,14 @@
 }
 
 .error {
-  background: rgba(200, 50, 50, 0.15);
-  border: 1px solid rgba(200, 50, 50, 0.3);
+  background: var(--toast-error-bg);
+  border: 1px solid var(--toast-error-border);
   color: var(--error);
 }
 
 .success {
-  background: rgba(68, 170, 153, 0.15);
-  border: 1px solid rgba(68, 170, 153, 0.3);
+  background: var(--toast-success-bg);
+  border: 1px solid var(--toast-success-border);
   color: var(--success);
 }
 

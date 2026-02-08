@@ -47,6 +47,12 @@ describe("parseOmdbResult", () => {
     const result = parseOmdbResult({ Response: "True", Year: "2024" });
     expect(result.rating).toBeNull();
   });
+
+  it("handles non-numeric year (NaN guard)", () => {
+    const result = parseOmdbResult({ Response: "True", Year: "N/A" });
+    expect(result.year).toBeNull();
+    expect(result.rawYear).toBe("N/A");
+  });
 });
 
 describe("getByImdbId", () => {

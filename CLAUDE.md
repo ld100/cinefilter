@@ -68,7 +68,7 @@ Coverage thresholds: 60% (branches, functions, lines, statements).
 
 ## Styling
 
-CSS Modules with CSS custom properties defined in `src/index.css`. Dark theme. Fonts: Playfair Display (headings), DM Sans (body), DM Mono (data/mono). Loaded from Google Fonts in `index.html`. Minimum font size: 12px.
+CSS Modules with CSS custom properties defined in `src/index.css`. Dark theme. Fonts: Playfair Display (headings), DM Sans (body), DM Mono (data/mono). Loaded from Google Fonts in `index.html`. Minimum font size: 12px. Color contrast meets WCAG AA (text variables `--text-dim` through `--text-invisible` are tuned for the `#0c0c0c` background). Layout uses `--header-height` variable. Skeleton/toast colors use design-system variables (`--bg-skeleton`, `--toast-*-bg/border`).
 
 ## Key design decisions
 
@@ -84,9 +84,11 @@ CSS Modules with CSS custom properties defined in `src/index.css`. Dark theme. F
 
 6. **Injectable fetch for testing**: All service functions accept an optional `fetchFn` parameter, enabling tests to mock network calls without patching globals.
 
-7. **In-memory API caching**: `ApiCache` class with 15-minute TTL avoids redundant API calls during the same session.
+7. **In-memory API caching**: `ApiCache` class with 15-minute TTL avoids redundant API calls during the same session. TMDB cache keys are built from endpoint + non-secret params (via `ApiCache.buildKey`) to avoid leaking API keys into Map keys.
 
-8. **TMDB "Hide Watched" auth flow**: Uses TMDB's 3-step OAuth-like flow (request token → browser approval → session creation) to access user-specific data. Session persisted in localStorage. Rated movie IDs are cached in localStorage with a 1-hour TTL. `categorizeMovies` checks watched status first (before mismatch/cutoff) so rated movies are always filtered regardless of verification status.
+8. **TMDB "Hide Watched" auth flow**: Uses TMDB's 3-step OAuth-like flow (request token → browser approval → session creation) to access user-specific data. Session persisted in localStorage. Rated movie IDs are cached in localStorage with a 1-hour TTL. `categorizeMovies` checks watched status first (before mismatch/cutoff) so rated movies are always filtered regardless of verification status. Rated movies pagination is capped at 500 pages.
+
+9. **Performance**: `categorizeMovies` is wrapped in `useMemo` in App.tsx. `MovieCard` is wrapped in `React.memo` to avoid re-renders when sibling cards update.
 
 ## Deployment
 

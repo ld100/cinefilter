@@ -65,6 +65,7 @@ export interface EnrichedMovie extends TmdbMovie {
   imdbRating?: number | null;
   imdbRatingStr?: string | null;
   _status?: VerifyStatus;
+  _errorMessage?: string;
 }
 
 // --- Filter / Config types ---
