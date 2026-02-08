@@ -3,7 +3,7 @@ import MultiSelect from "./MultiSelect";
 import RatingSlider from "./RatingSlider";
 import useDebounce from "../hooks/useDebounce";
 import { GENRES, PROVIDERS, WATCH_REGIONS, CURRENT_YEAR, PAGE_SIZES } from "../constants";
-import type { Filters } from "../types";
+import type { AuthStep, Filters, TmdbSession } from "../types";
 import styles from "./FilterPanel.module.css";
 
 interface FilterPanelProps {
@@ -11,6 +11,13 @@ interface FilterPanelProps {
   onChange: Dispatch<SetStateAction<Filters>>;
   onSearch: () => void;
   loading: boolean;
+  tmdbSession: TmdbSession | null;
+  authStep: AuthStep;
+  authError: string | null;
+  loadingRated: boolean;
+  onStartAuth: () => void;
+  onConfirmApproval: () => void;
+  onDisconnectTmdb: () => void;
 }
 
 export default function FilterPanel({
@@ -18,6 +25,13 @@ export default function FilterPanel({
   onChange,
   onSearch,
   loading,
+  tmdbSession,
+  authStep,
+  authError,
+  loadingRated,
+  onStartAuth,
+  onConfirmApproval,
+  onDisconnectTmdb,
 }: FilterPanelProps) {
   const set =
     <K extends keyof Filters>(key: K) =>
@@ -146,6 +160,74 @@ export default function FilterPanel({
         </p>
       </section>
 
+      {/* Hide watched */}
+      <section className={styles.section}>
+        <label className={styles.label}>Hide Watched</label>
+        {authStep === "idle" && (
+          <label className={styles.checkboxLabel}>
+            <input
+              type="checkbox"
+              checked={filters.hideWatched}
+              onChange={(e) => {
+                const checked = e.target.checked;
+                set("hideWatched")(checked);
+                if (checked && !tmdbSession) onStartAuth();
+              }}
+            />
+            Hide movies I've rated on TMDB
+          </label>
+        )}
+        {authStep === "awaiting_approval" && (
+          <div className={styles.authFlow}>
+            <p className={styles.hint}>
+              Approve CineFilter in the TMDB tab that opened, then click below.
+            </p>
+            <button type="button" className={styles.authBtn} onClick={onConfirmApproval}>
+              I've approved it
+            </button>
+          </div>
+        )}
+        {authStep === "connecting" && (
+          <div className={styles.spinnerRow}>
+            <span className={styles.spinner} />
+            <p className={styles.hint}>Connecting to TMDB account...</p>
+          </div>
+        )}
+        {authStep === "connected" && (
+          <div>
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                checked={filters.hideWatched}
+                onChange={(e) => set("hideWatched")(e.target.checked)}
+              />
+              Hide movies I've rated on TMDB
+            </label>
+            {loadingRated && (
+              <div className={styles.spinnerRow}>
+                <span className={styles.spinner} />
+                <p className={styles.hint}>Loading rated list...</p>
+              </div>
+            )}
+            <button
+              type="button"
+              className={styles.disconnectBtn}
+              onClick={onDisconnectTmdb}
+            >
+              Disconnect TMDB
+            </button>
+          </div>
+        )}
+        {authStep === "error" && (
+          <div className={styles.authFlow}>
+            <p className={styles.authError}>{authError}</p>
+            <button type="button" className={styles.authBtn} onClick={onStartAuth}>
+              Try again
+            </button>
+          </div>
+        )}
+      </section>
+
       {/* Exclude genres */}
       <section className={styles.section}>
         <label className={styles.label}>
@@ -218,9 +300,13 @@ export default function FilterPanel({
         type="button"
         className={styles.searchBtn}
         onClick={onSearch}
-        disabled={loading}
+        disabled={loading || loadingRated}
       >
-        {loading ? "Searching & Verifying…" : "Search"}
+        {loadingRated
+          ? "Fetching watch history…"
+          : loading
+            ? "Searching & Verifying…"
+            : "Search"}
       </button>
     </aside>
   );

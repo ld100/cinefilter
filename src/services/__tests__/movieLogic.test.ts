@@ -153,5 +153,42 @@ describe("categorizeMovies", () => {
     expect(result.visible).toHaveLength(3);
     expect(result.hidden).toHaveLength(0);
     expect(result.belowCutoff).toHaveLength(0);
+    expect(result.watched).toHaveLength(0);
+  });
+
+  it("moves watched movies to watched array", () => {
+    const verification: Record<number, VerifyStatus> = {
+      1: "verified",
+      2: "verified",
+      3: "verified",
+    };
+    const watchedIds = new Set([2]);
+    const result = categorizeMovies(movies, verification, null, watchedIds);
+    expect(result.visible).toHaveLength(2);
+    expect(result.watched).toHaveLength(1);
+    expect(result.watched[0].id).toBe(2);
+  });
+
+  it("watched takes priority over mismatch", () => {
+    const verification: Record<number, VerifyStatus> = {
+      1: "verified",
+      2: "mismatch",
+      3: "verified",
+    };
+    const watchedIds = new Set([2]);
+    const result = categorizeMovies(movies, verification, null, watchedIds);
+    expect(result.watched).toHaveLength(1);
+    expect(result.watched[0].id).toBe(2);
+    expect(result.hidden).toHaveLength(0);
+  });
+
+  it("returns empty watched when watchedIds is undefined", () => {
+    const verification: Record<number, VerifyStatus> = {
+      1: "verified",
+      2: "verified",
+      3: "verified",
+    };
+    const result = categorizeMovies(movies, verification, null, undefined);
+    expect(result.watched).toHaveLength(0);
   });
 });

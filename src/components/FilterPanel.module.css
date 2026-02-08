@@ -135,6 +135,88 @@
   border-color: var(--text-muted);
 }
 
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid var(--border-input);
+  border-top-color: var(--text-muted);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  flex-shrink: 0;
+}
+
+.spinnerRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.checkboxLabel input[type="checkbox"] {
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.authFlow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.authBtn {
+  padding: 6px 12px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-input);
+  border-radius: 3px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  align-self: flex-start;
+}
+
+.authBtn:hover {
+  border-color: var(--text-dim);
+}
+
+.authError {
+  font-size: 12px;
+  color: var(--error);
+  font-family: var(--font-mono);
+  margin: 0;
+}
+
+.disconnectBtn {
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 0;
+  margin-top: 4px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.disconnectBtn:hover {
+  color: var(--error);
+}
+
 @media (max-width: 768px) {
   .panel {
     width: 100%;

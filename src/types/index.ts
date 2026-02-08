@@ -96,6 +96,7 @@ export interface Filters {
   minVotes: number;
   imdbCutoff: number | null;
   pageSize: PageSize;
+  hideWatched: boolean;
 }
 
 export interface ApiKeys {
@@ -107,6 +108,48 @@ export interface SearchStats {
   verified: number;
   mismatched: number;
   pending: number;
+}
+
+// --- TMDB Auth ---
+
+export type AuthStep =
+  | "idle"
+  | "awaiting_approval"
+  | "connecting"
+  | "connected"
+  | "error";
+
+export interface TmdbSession {
+  sessionId: string;
+  accountId: number;
+}
+
+export interface TmdbRequestTokenResponse {
+  success: boolean;
+  request_token: string;
+  expires_at: string;
+}
+
+export interface TmdbSessionResponse {
+  success: boolean;
+  session_id: string;
+}
+
+export interface TmdbAccountResponse {
+  id: number;
+  username: string;
+}
+
+export interface TmdbRatedMovie {
+  id: number;
+  rating: number;
+}
+
+export interface TmdbRatedMoviesResponse {
+  page: number;
+  total_pages: number;
+  total_results: number;
+  results: TmdbRatedMovie[];
 }
 
 // --- Toast ---

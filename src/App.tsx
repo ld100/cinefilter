@@ -5,6 +5,7 @@ import MovieCard from "./components/MovieCard";
 import MovieCardSkeleton from "./components/MovieCardSkeleton";
 import Toast from "./components/Toast";
 import useMovieSearch from "./hooks/useMovieSearch";
+import useTmdbSession from "./hooks/useTmdbSession";
 import useToast from "./hooks/useToast";
 import { categorizeMovies } from "./services/movieLogic";
 import { DEFAULT_FILTERS } from "./constants";
@@ -49,6 +50,18 @@ export default function App() {
     cancel,
   } = useMovieSearch(keys || { tmdbKey: "", omdbKey: "" });
 
+  const {
+    session: tmdbSession,
+    authStep,
+    authError,
+    ratedMovieIds,
+    loadingRated,
+    startAuth,
+    confirmApproval,
+    refreshRatedMovies,
+    disconnect: disconnectTmdb,
+  } = useTmdbSession(keys?.tmdbKey || "");
+
   useEffect(() => cancel, [cancel]);
 
   useEffect(() => {
@@ -60,7 +73,10 @@ export default function App() {
     setKeys(newKeys);
   };
 
-  const handleSearch = (pageNum = 1) => {
+  const handleSearch = async (pageNum = 1) => {
+    if (filters.hideWatched && tmdbSession) {
+      await refreshRatedMovies();
+    }
     search(filters, pageNum);
   };
 
@@ -68,16 +84,20 @@ export default function App() {
     localStorage.removeItem(STORAGE_KEY);
     setKeys(null);
     cancel();
+    disconnectTmdb();
   };
 
   if (!keys) {
     return <ApiKeySetup onSubmit={handleKeysSubmit} />;
   }
 
-  const { visible, hidden, belowCutoff } = categorizeMovies(
+  const watchedIds = filters.hideWatched && ratedMovieIds ? ratedMovieIds : undefined;
+
+  const { visible, hidden, belowCutoff, watched } = categorizeMovies(
     movies,
     verification,
     filters.imdbCutoff,
+    watchedIds,
   );
 
   return (
@@ -105,6 +125,13 @@ export default function App() {
           onChange={setFilters}
           onSearch={() => handleSearch(1)}
           loading={loading}
+          tmdbSession={tmdbSession}
+          authStep={authStep}
+          authError={authError}
+          loadingRated={loadingRated}
+          onStartAuth={startAuth}
+          onConfirmApproval={confirmApproval}
+          onDisconnectTmdb={disconnectTmdb}
         />
 
         {/* Results */}
@@ -115,13 +142,14 @@ export default function App() {
                 {totalResults} found · {stats.verified} verified · {stats.mismatched}{" "}
                 re-releases filtered
                 {belowCutoff.length > 0 && ` · ${belowCutoff.length} below IMDB cutoff`}
+                {watched.length > 0 && ` · ${watched.length} watched`}
                 {stats.pending > 0 && ` · ${stats.pending} checking`}
               </div>
               <Pagination page={page} totalPages={totalPages} onNavigate={handleSearch} />
             </div>
           )}
 
-          {movies.length === 0 && !loading && !error && (
+          {movies.length === 0 && !loading && !loadingRated && !error && (
             <div className={styles.empty}>
               <div className={styles.emptyIcon}>◎</div>
               <p className={styles.emptyTitle}>Set your filters and search</p>
@@ -132,7 +160,7 @@ export default function App() {
           )}
 
           {/* Loading skeletons */}
-          {loading && movies.length === 0 && (
+          {(loading || loadingRated) && movies.length === 0 && (
             <div className={styles.movieList}>
               {Array.from({ length: 10 }, (_, i) => (
                 <MovieCardSkeleton key={i} />
@@ -159,6 +187,22 @@ export default function App() {
               <div className={styles.movieList}>
                 {belowCutoff.map((m) => (
                   <MovieCard key={m.id} movie={m} status="mismatch" />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Already watched section */}
+          {watched.length > 0 && (
+            <div className={styles.filteredSection}>
+              <p className={styles.filteredLabel}>Already watched ({watched.length})</p>
+              <div className={styles.movieList}>
+                {watched.map((m) => (
+                  <MovieCard
+                    key={m.id}
+                    movie={m}
+                    status={verification[m.id] || ("checking" as VerifyStatus)}
+                  />
                 ))}
               </div>
             </div>

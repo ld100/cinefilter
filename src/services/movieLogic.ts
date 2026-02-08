@@ -64,16 +64,23 @@ export function categorizeMovies(
   movies: EnrichedMovie[],
   verification: Record<number, VerifyStatus>,
   imdbCutoff: number | null,
+  watchedIds?: Set<number>,
 ): {
   visible: EnrichedMovie[];
   hidden: EnrichedMovie[];
   belowCutoff: EnrichedMovie[];
+  watched: EnrichedMovie[];
 } {
   const visible: EnrichedMovie[] = [];
   const hidden: EnrichedMovie[] = [];
   const belowCutoff: EnrichedMovie[] = [];
+  const watched: EnrichedMovie[] = [];
 
   for (const m of movies) {
+    if (watchedIds && watchedIds.has(m.id)) {
+      watched.push(m);
+      continue;
+    }
     const status = verification[m.id];
     if (status === "mismatch") {
       hidden.push(m);
@@ -89,5 +96,5 @@ export function categorizeMovies(
     }
   }
 
-  return { visible, hidden, belowCutoff };
+  return { visible, hidden, belowCutoff, watched };
 }

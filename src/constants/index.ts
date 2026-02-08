@@ -72,4 +72,5 @@ export const DEFAULT_FILTERS: Filters = {
   minVotes: 100,
   imdbCutoff: null,
   pageSize: DEFAULT_PAGE_SIZE,
+  hideWatched: false,
 };

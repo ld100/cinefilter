@@ -49,6 +49,7 @@ export const mockFilters: Filters = {
   minVotes: 100,
   imdbCutoff: null,
   pageSize: 20,
+  hideWatched: false,
 };
 
 export const mockEnrichedMovie: EnrichedMovie = {
